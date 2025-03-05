@@ -75,3 +75,9 @@ a:hover {
   color: #d35400; /* Default color */
   font-size: 0.9rem;
 }
+
+#pauseMusic {
+  color: green;
+  background-color: f2a900;
+  width: 150px;
+}

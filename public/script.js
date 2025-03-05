@@ -97,8 +97,8 @@ passwordInput.addEventListener("input", function () {
 const loginForm = document.getElementById("loginnow");
 const errorMsg = document.getElementById("errorMsg");
 
-loginForm.addEventListener("submit", function (e) {
-  e.preventDefault(); // Prevent default form submission
+loginForm.addEventListener("submit", async function (e) {
+  e.preventDefault(); // Stop the page from reloading
 
   const formData = new FormData(loginForm);
   const data = {
@@ -106,30 +106,40 @@ loginForm.addEventListener("submit", function (e) {
     password: formData.get("password"),
   };
 
-  fetch("/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        // If response is not ok, display error
-        return response.json().then((err) => {
-          throw new Error(err.message || "Invalid username/password");
-        });
-      }
-      return response.json();
-    })
-    .then((data) => {
-      // Login successful
-      console.log("Login successful:", data);
-      window.location.href = data.redirect; // Redirect or show success message
-    })
-    .catch((error) => {
-      // Display error message on the page
-      errorMsg.style.display = "block";
-      errorMsg.textContent = error.message;
+  try {
+    const response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // ✅ Send session cookies
+      body: JSON.stringify(data),
     });
+
+    const responseData = await response.json(); // Convert response to JSON
+    console.log("📢 Received from server:", responseData); // Debugging log
+
+    if (response.ok) {
+      console.log("✅ Login successful! Redirecting...");
+      document.cookie = "sessionActive=true; path=/"; // Force session persistence
+      window.location.href = "/dashboard.html";
+    } else {
+      console.error("❌ Login failed:", responseData.message);
+      errorMsg.style.display = "block";
+      errorMsg.textContent = responseData.message || "Something went wrong."; // Display backend error
+    }
+  } catch (error) {
+    console.error("❌ Fetch error:", error);
+    errorMsg.style.display = "block";
+    errorMsg.textContent = "Unexpected error. Please try again.";
+  }
 });
+
+function toggleMusic() {
+  var music = document.getElementById("bg-music");
+  if (music.paused) {
+    music.play();
+  } else {
+    music.pause();
+  }
+}

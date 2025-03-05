@@ -4,7 +4,11 @@
     <title>Implementation of JS skills</title>
   </head>
   <body>
-    <h1>Implement.</h1>
+    <audio id="bg-music" loop>
+      <source src="music.mp3" type="audio/mpeg" />
+    </audio>
+
+    <h1><marquee>Reyansh College of Hotel Management</marquee></h1>
     <h2 id="titleText">Login Now:</h2>
     <form action="/login" method="POST" id="loginnow">
       <input type="text" name="username" placeholder="Username" required />
@@ -31,7 +35,7 @@
     <p id="toggleText">
       Don't have an account? <a href="#" onclick="toggleForm()">Sign up now</a>
     </p>
-
+    <button id="pauseMusic" onclick="toggleMusic()">Play/Pause Music</button>
     <script src="script.js"></script>
   </body>
 </html>
